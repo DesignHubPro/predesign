@@ -6,75 +6,91 @@
 <title>Custom Design Editor</title>
 <style>
 body {
-font-family: Arial, sans-serif;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-background-color: #f0f0f0;
-margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    height: 100vh;
 }
-.canvas-container {
-position: relative;
-width: 410px; /* Display size (smaller) */
-height: 500px; /* Display size (smaller) */
-}
-.template-image {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-}
-.red-box {
-position: absolute;
-top: 320px; /* Adjustable */
-left: 240px; /* Adjustable */
-width: 125px; /* Scaled down size */
-height: 151px; /* Scaled down size */
-overflow: hidden;
-border: 1px dashed white;
-}
-.blue-bar {
-position: absolute;
-bottom: 40px; /* Adjustable */
-left: 20px; /* Adjustable */
-width: 230px; /* Scaled down size */
-height: 30px; /* Scaled down size */
 
-text-align: center;
-line-height: 30px;
-font-size: 10px; /* Scaled down size */
-font-weight: bold;
-color: white;
-background-color: red;
+.canvas-container {
+    position: relative;
+    width: 410px;
+    height: 500px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
 }
+
+.template-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.red-box {
+    position: absolute;
+    top: 320px;
+    left: 240px;
+    width: 125px;
+    height: 151px;
+    overflow: hidden;
+    border: 1px dashed white;
+    border-radius: 10px;
+}
+
+.blue-bar {
+    position: absolute;
+    bottom: 40px;
+    left: 20px;
+    width: 230px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+}
+
 .controls {
-margin-top: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 .controls input, .controls button {
-margin: 10px;
-padding: 10px;
+    margin: 10px;
+    padding: 10px;
 }
 </style>
 </head>
 <body>
 <div class="canvas-container" id="canvasContainer">
-<!-- Template Image -->
-<img src="https://i.pinimg.com/736x/48/ae/94/48ae94529c0088af6b74033bbe636d58.jpg" alt="Template" class="template-image">
+    <!-- Template Image -->
+    <img src="https://i.pinimg.com/736x/48/ae/94/48ae94529c0088af6b74033bbe636d58.jpg" alt="Template" class="template-image" id="templateImage">
 
-<!-- Red Box for Photo -->
-<div class="red-box" id="redBox"></div>
+    <!-- Red Box for Photo -->
+    <div class="red-box" id="redBox"></div>
 
-<!-- Blue Bar for Name -->
-<div class="blue-bar" id="blueBar">Your Name</div>
+    <!-- Blue Bar for Name -->
+    <div class="blue-bar" id="blueBar">Your Name</div>
 </div>
 
 <!-- Controls -->
 <div class="controls">
-<input type="file" id="photoInput" accept="image/*">
-<input type="text" id="nameInput" placeholder="Enter your name">
-<button id="downloadBtn">Download</button>
+    <input type="file" id="photoInput" accept="image/*">
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button id="downloadBtn">Download</button>
 </div>
 
 <script>
@@ -83,60 +99,65 @@ const blueBar = document.getElementById('blueBar');
 const photoInput = document.getElementById('photoInput');
 const nameInput = document.getElementById('nameInput');
 const downloadBtn = document.getElementById('downloadBtn');
-const canvasContainer = document.getElementById('canvasContainer');
+const templateImage = document.getElementById('templateImage');
 
 // Load uploaded photo into red box
 photoInput.addEventListener('change', (event) => {
-const file = event.target.files[0];
-if (file) {
-const img = document.createElement('img');
-img.src = URL.createObjectURL(file);
-img.style.width = '100%';
-img.style.height = '100%';
-img.style.objectFit = 'cover';
-redBox.innerHTML = '';
-redBox.appendChild(img);
-}
+    const file = event.target.files[0];
+    if (file) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        redBox.innerHTML = '';
+        redBox.appendChild(img);
+    }
 });
 
 // Update name in blue bar
 nameInput.addEventListener('input', (event) => {
-blueBar.textContent = event.target.value || 'Your Name';
+    blueBar.textContent = event.target.value || 'Your Name';
 });
 
 // Download the edited image
 downloadBtn.addEventListener('click', () => {
-const canvas = document.createElement('canvas');
-canvas.width = 1200; // High resolution for download
-canvas.height = 1500; // High resolution for download
-const ctx = canvas.getContext('2d');
+    const canvas = document.createElement('canvas');
+    canvas.width = 1200; // High resolution for download
+    canvas.height = 1500; // High resolution for download
+    const ctx = canvas.getContext('2d');
 
-// Draw the template image
-const templateImg = new Image();
-templateImg.src = 'Frame 12.jpg'; // Template image source
-templateImg.onload = () => {
-ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
+    // Draw the template image
+    const templateImg = new Image();
+    templateImg.crossOrigin = "anonymous"; // Allow external images
+    templateImg.src = templateImage.src;
+    templateImg.onload = () => {
+        ctx.drawImage(templateImg, 0, 0, canvas.width, canvas.height);
 
-// Draw red box photo (scaled for high resolution)
-if (redBox.firstChild && redBox.firstChild.tagName === 'IMG') {
-const img = redBox.firstChild;
-ctx.drawImage(img, 412, 450, 375, 453); // High-resolution coordinates
-}
+        // Draw the red box photo if available
+        if (redBox.firstChild && redBox.firstChild.tagName === 'IMG') {
+            const img = redBox.firstChild;
+            ctx.drawImage(img, 412, 450, 375, 453); // Adjust coordinates
+        }
 
-// Draw blue bar text
-ctx.fillStyle = 'blue';
-ctx.fillRect(300, 1350, 600, 50); // High-resolution blue bar dimensions
-ctx.fillStyle = 'white';
-ctx.font = '36px Arial'; // Scaled for high resolution
-ctx.textAlign = 'center';
-ctx.fillText(nameInput.value || 'Your Name', 600, 1385); // High-resolution text position
+        // Draw the blue bar text
+        ctx.fillStyle = 'red';
+        ctx.fillRect(300, 1350, 600, 50);
+        ctx.fillStyle = 'white';
+        ctx.font = '36px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(nameInput.value || 'Your Name', 600, 1385);
 
-// Download the final image
-const link = document.createElement('a');
-link.download = 'edited-image.png';
-link.href = canvas.toDataURL();
-link.click();
-};
+        // Trigger download
+        const link = document.createElement('a');
+        link.download = 'edited-image.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    };
+
+    templateImg.onerror = () => {
+        alert('Failed to load the template image. Ensure the image URL is accessible.');
+    };
 });
 </script>
 </body>
