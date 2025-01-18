@@ -13,11 +13,14 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
+      padding: 0 10px; /* Added padding for mobile responsiveness */
+      box-sizing: border-box;
     }
 
     #design-container {
       position: relative;
-      width: 400px;
+      width: 100%;
+      max-width: 400px;
       height: 500px;
       border: 1px solid #000;
     }
@@ -49,10 +52,14 @@
 
     .controls {
       margin-top: 20px;
+      width: 100%;
+      max-width: 400px;
     }
 
     input {
       margin-bottom: 10px;
+      width: 100%;
+      box-sizing: border-box;
     }
   </style>
 </head>
